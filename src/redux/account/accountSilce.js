@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuthorize: false,
+  isAuthorized: false,
   user: {
     email: "",
     phone: "",
@@ -23,7 +23,7 @@ export const accountSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.isAuthorize = true;
+      state.isAuthorized = true;
       state.user = action.payload;
     },
     doGetAccountAction: (state, action) => {
@@ -31,7 +31,7 @@ export const accountSlice = createSlice({
         // doesn't actually mutate the state because it uses the Immer library,
         // which detects changes to a "draft state" and produces a brand new
         // immutable state based off those changes
-        state.isAuthorize = true;
+        state.isAuthorized = true;
         state.user = action.payload;
       },
   },
