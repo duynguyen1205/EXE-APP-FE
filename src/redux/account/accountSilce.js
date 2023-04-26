@@ -32,7 +32,7 @@ export const accountSlice = createSlice({
         // which detects changes to a "draft state" and produces a brand new
         // immutable state based off those changes
         state.isAuthorized = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
       },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,

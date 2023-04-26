@@ -14,6 +14,7 @@ import Loading from "./components/Loading";
 import NotFound from "./components/NotFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLayout from "./components/Admin/AdminLayout";
 
 const Layout = () => {
   return (
@@ -24,11 +25,18 @@ const Layout = () => {
     </div>
   );
 };
+
+
 export default function App() {
   const dispatch = useDispatch();
   const isAuthorized = useSelector((state) => state.account.isAuthorized);
   const getAccount = async () => {
-    if (window.location.pathname === "/login") return;
+    if (
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/register" ||
+      window.location.pathname === "/"
+    )
+      return;
     const res = await getUser();
     if (res && res.data) {
       dispatch(doGetAccountAction(res.data));
@@ -41,7 +49,7 @@ export default function App() {
   const router = createBrowserRouter([
     {
       path: "/admin",
-      element: <Layout />,
+      element: <AdminLayout />,
       errorElement: <NotFound />,
 
       children: [
@@ -96,7 +104,8 @@ export default function App() {
     <>
       {isAuthorized === true ||
       window.location.pathname === "/login" ||
-      window.location.pathname === "/admin" ? (
+      window.location.pathname === "/register" ||
+      window.location.pathname === "/" ? (
         <RouterProvider router={router} />
       ) : (
         <Loading />
