@@ -8,11 +8,13 @@ import {
   DollarCircleOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Dropdown, Space } from "antd";
+import { Layout, Menu, Dropdown, Space, message } from "antd";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./admin.scss";
+import { callLogout } from "../../services/api";
+import { doLogoutAction } from "../../redux/account/accountSilce";
 const { Content, Footer, Sider } = Layout;
 const items = [
   {
@@ -48,81 +50,96 @@ const items = [
   },
 ];
 
-const itemDropdown = [
-  {
-    label: <label>Account Manager</label>,
-    key: "account",
-  },
-  {
-    label: <label>Log Out</label>,
-    key: "logout",
-  },
-];
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState(false);
   const user = useSelector((state) => state.account.user);
-  return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-      className="layout-admin"
-    >
-      <Sider
-        theme="light"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    const res = await callLogout();
+    if (res && res.data) {
+      dispatch(doLogoutAction());
+      message.success("Logged out successfully");
+      navigate("/");
+    }
+  };
+  const itemDropdown = [
+    {
+      label: <label>Account Manager</label>,
+      key: "account",
+    },
+    {
+      label: (
+        <label style={{ cursor: "pointer" }} onClick={() => handleLogout()}>
+          Log out
+        </label>
+      ),
+      key: "logout",
+    },
+  ];
+    return (
+      <Layout
+        style={{
+          minHeight: "100vh",
+        }}
+        className="layout-admin"
       >
-        <div style={{ height: 32, margin: 16, textAlign: "center" }}>Admin</div>
-        <Menu
-          defaultSelectedKeys={[activeMenu]}
-          mode="inline"
-          items={items}
-          onClick={(e) => setActiveMenu(e.key)}
-        />
-      </Sider>
-
-      <Layout className="site-layout">
-        <div className="admin-header">
-          <span>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              { className: "trigger", onClick: () => setCollapsed(!collapsed) }
-            )}
-          </span>
-
-          <Dropdown
-            menu={{
-              items: itemDropdown,
+        <Sider
+          theme="light"
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+        >
+          <div style={{ height: 32, margin: 16, textAlign: "center" }}>Admin</div>
+          <Menu
+            defaultSelectedKeys={[activeMenu]}
+            mode="inline"
+            items={items}
+            onClick={(e) => setActiveMenu(e.key)}
+          />
+        </Sider>
+  
+        <Layout className="site-layout">
+          <div className="admin-header">
+            <span>
+              {React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                { className: "trigger", onClick: () => setCollapsed(!collapsed) }
+              )}
+            </span>
+  
+            <Dropdown
+              menu={{
+                items: itemDropdown,
+              }}
+              trigger={["click"]}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  Welcome {user?.fullName}
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          </div>
+          <Content
+            style={{
+              margin: "0 16px",
             }}
-            trigger={["click"]}
           >
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                Welcome {user?.fullName}
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
-        </div>
-        <Content
-          style={{
-            margin: "0 16px",
-          }}
-        >
-          <Outlet />
-        </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Ant Design ©2023 Created by Ant UED
-        </Footer>
+            <Outlet />
+          </Content>
+          <Footer
+            style={{
+              textAlign: "center",
+            }}
+          >
+            Ant Design ©2023 Created by Ant UED
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
-  );
+    );
+
 };
 export default AdminLayout;

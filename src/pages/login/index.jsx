@@ -52,7 +52,7 @@ const LoginPage = () => {
             onFinish={onFinish}
             autoComplete="off"
           >
-            <span className="login100-form-title p-b-43">Đăng nhập</span>
+            <span className="login100-form-title p-b-43">Login</span>
             <Form.Item
               name="username"
               rules={[
@@ -97,14 +97,14 @@ const LoginPage = () => {
                   htmlType="submit"
                   loading={isSubmit}
                 >
-                  Đăng nhập
+                  Login
                 </Button>
               </div>
             </Form.Item>
             <Divider>Or</Divider>
             <div className="text-center p-t-20 p-b-20">
               <span className="txt2">
-                <Link to="/register"> Đăng kí tại đây </Link>
+                <Link to="/register"> Register here </Link>
               </span>
             </div>
           </Form>

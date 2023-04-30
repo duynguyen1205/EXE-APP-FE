@@ -9,6 +9,10 @@ export const login = ( username, password) => {
     return axios.post('/api/v1/auth/login', {  username, password, delay: 1000 })
 }
 
+export const callLogout = () => {
+    return axios.post('/api/v1/auth/logout')
+}
+
 export const getUser = () => {
     return axios.get('/api/v1/auth/account')
 }

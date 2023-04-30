@@ -31,7 +31,7 @@ const RegisterPage = () => {
             <div className="container">
                 <section className="wrapper">
                     <div className="heading">
-                        <h2 className="text text-large">Đăng Ký Tài Khoản</h2>
+                        <h2 className="text text-large">Register</h2>
                         <Divider />
                     </div>
                     <Form
@@ -41,7 +41,7 @@ const RegisterPage = () => {
                     >
                         <Form.Item
                             labelCol={{ span: 24 }} //whole column
-                            label="Họ tên"
+                            label="Full Name"
                             name="fullName"
                             rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
                         >
@@ -60,7 +60,7 @@ const RegisterPage = () => {
 
                         <Form.Item
                             labelCol={{ span: 24 }} //whole column
-                            label="Mật khẩu"
+                            label="Password"
                             name="password"
                             rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
                         >
@@ -68,7 +68,7 @@ const RegisterPage = () => {
                         </Form.Item>
                         <Form.Item
                             labelCol={{ span: 24 }} //whole column
-                            label="Số điện thoại"
+                            label="Phone number"
                             name="phone"
                             rules={[{ required: true, message: 'Số điện thoại không được để trống!' }]}
                         >
@@ -80,13 +80,13 @@ const RegisterPage = () => {
                         >
                           
                             <Button type="primary" htmlType="submit" loading={isSubmit} > 
-                                Đăng ký
+                                Register
                             </Button>
                         </Form.Item>
                         <Divider>Or</Divider>
-                        <p className="text text-normal">Đã có tài khoản ?
+                        <p className="text text-normal">Already have account?
                             <span>
-                                <Link to='/login' > Đăng Nhập </Link>
+                                <Link to='/login' > Login </Link>
                             </span>
                         </p>
                     </Form>

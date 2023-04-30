@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
-import ContactPage from "./pages/contact";
+import ContactPage from "./pages/CRUD";
 import BookPage from "./pages/book";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -15,6 +15,7 @@ import NotFound from "./components/NotFound";
 import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/Admin/AdminLayout";
+import CrudPage from "./pages/CRUD";
 
 const Layout = () => {
   return (
@@ -26,15 +27,13 @@ const Layout = () => {
   );
 };
 
-
 export default function App() {
   const dispatch = useDispatch();
-  const isAuthorized = useSelector((state) => state.account.isAuthorized);
+  const isLoading = useSelector((state) => state.account.isLoading);
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register" ||
-      window.location.pathname === "/"
+      window.location.pathname === "/register"
     )
       return;
     const res = await getUser();
@@ -49,22 +48,22 @@ export default function App() {
   const router = createBrowserRouter([
     {
       path: "/admin",
-      element: <AdminLayout />,
+      element: (
+        <ProtectedRoute>
+          <AdminLayout />
+        </ProtectedRoute>
+      ),
       errorElement: <NotFound />,
 
       children: [
         {
           index: true,
-          element: (
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          ),
+          element: <AdminPage />,
         },
 
         {
           path: "user",
-          element: <ContactPage />,
+          element: <CrudPage />,
         },
         {
           path: "book",
@@ -102,7 +101,7 @@ export default function App() {
   ]);
   return (
     <>
-      {isAuthorized === true ||
+      {isLoading === false ||
       window.location.pathname === "/login" ||
       window.location.pathname === "/register" ||
       window.location.pathname === "/" ? (

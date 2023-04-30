@@ -7,13 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
-// import { callLogout } from '../../services/api';
+import { callLogout } from '../../services/api';
 import './header.scss';
-// import { doLogoutAction } from '../../redux/account/accountSlice';
+import { doLogoutAction } from '../../redux/account/accountSilce';
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
-    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.account.isAuthorized);
     const user = useSelector(state => state.account.user);
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -22,11 +22,10 @@ const Header = () => {
         const res = await callLogout();
         if (res && res.data) {
             dispatch(doLogoutAction());
-            message.success('Đăng xuất thành công');
+            message.success('Log out successfully');
             navigate('/')
         }
     }
-
     const items = [
         {
             label: <label style={{ cursor: 'pointer' }}>Account Managerment</label>,
@@ -96,9 +95,9 @@ const Header = () => {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}
             >
-                <p>Account Managerment</p>
+                <p>Account Management</p>
                 <Divider />
-
+                            
                 <p>Logout</p>
                 <Divider />
             </Drawer>
