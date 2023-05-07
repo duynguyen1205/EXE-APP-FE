@@ -61,7 +61,6 @@ html {
 a {
 	font-family: $font-family_2;
 	font-size: 14px;
-	line-height: 1.7;
 	color: $color_1;
 	margin: 0px;
 	transition: all 0.4s;
@@ -175,14 +174,7 @@ label {
 	display: block;
 	margin: 0;
 }
-button {
-	outline: none !important;
-	border: none;
-	background: transparent;
-	&:hover {
-		cursor: pointer;
-	}
-}
+
 iframe {
 	border: none !important;
 }

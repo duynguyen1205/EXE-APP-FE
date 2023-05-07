@@ -1,19 +1,33 @@
-import React from 'react';
+import React from "react";
 
-import { Button, Col, Form, Input, Row, Space, theme } from 'antd';
+import { Button, Col, Form, Input, Row, Space, theme } from "antd";
 
-const AdvancedSearchForm = () => {
+const AdvancedSearchForm = (props) => {
   const { token } = theme.useToken();
   const [form] = Form.useForm();
   const formStyle = {
-    maxWidth: 'none',
+    maxWidth: "none",
     background: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
-    padding: 24,
-    marginTop:24,
+    padding: 20,
+    marginTop: 20,
   };
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    
+    let query = "";
+    if (values.fullName) {
+      query += `&fullName=/${values.fullName}/i`;
+    }
+    if (values.email) {
+      query += `&email=/${values.email}/i`;
+    }
+    if (values.phone) {
+      query += `&phone=/${values.phone}/i`;
+    }
+
+    if (query) {
+      props.handleSearch(query);  
+    }
   };
   return (
     <Form
@@ -28,7 +42,7 @@ const AdvancedSearchForm = () => {
       <Row gutter={24}>
         {
           <Col span={8}>
-            <Form.Item name="name" label="Name">
+            <Form.Item name="fullName" label="Name">
               <Input placeholder="placeholder" />
             </Form.Item>
           </Col>
@@ -51,7 +65,7 @@ const AdvancedSearchForm = () => {
 
       <div
         style={{
-          textAlign: 'right',
+          textAlign: "right",
         }}
       >
         <Space size="small">

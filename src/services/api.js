@@ -16,3 +16,11 @@ export const callLogout = () => {
 export const getUser = () => {
     return axios.get('/api/v1/auth/account')
 }
+
+export const getAllUsers = (query) => {
+    return axios.get(`/api/v1/user?${query}`)
+}
+
+export const createUserByAdmin = (fullName, email, password, phone) => {
+    return axios.post('/api/v1/user/', { fullName, email, password, phone })
+}

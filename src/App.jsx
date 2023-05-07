@@ -16,7 +16,7 @@ import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/Admin/AdminLayout";
 import CrudPage from "./pages/CRUD";
-
+import "./styles/reset.scss";
 const Layout = () => {
   return (
     <div className="layout-page">

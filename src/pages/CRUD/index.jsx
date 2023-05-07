@@ -1,10 +1,8 @@
-import AdvancedSearchForm from "../../components/Admin/User/inputSearch";
-
+import TableUser from "../../components/Admin/User/TableUser";
 const CrudPage = () => {
   return (
     <>
-     <AdvancedSearchForm/>
-     
+     <TableUser/>
     </>
   );
 };
