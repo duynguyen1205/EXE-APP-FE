@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Divider, Form, Input, Modal, Radio, message, notification } from "antd";
+import { Divider, Form, Input, Modal, message, notification } from "antd";
 import { createUserByAdmin } from "../../../services/api";
 
 const AddUserModal = (props) => {
@@ -43,6 +43,7 @@ const AddUserModal = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
         confirmLoading={isSubmit}
+        maskClosable={false}
       >
         <Divider />
         <Form

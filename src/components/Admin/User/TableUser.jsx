@@ -12,6 +12,7 @@ import {
 import UserDetail from "./UserDetail";
 import AddUserModal from "./ModalAddUser";
 import moment from "moment";
+import UploadByFile from "./UploadByFile";
 
 const TableUser = () => {
   const [listUser, setListUser] = useState([]);
@@ -24,6 +25,7 @@ const TableUser = () => {
   const [data, setDataUser] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploadMD, setUpLoadMd] = useState(false);
 
   // columns
   const columns = [
@@ -58,12 +60,10 @@ const TableUser = () => {
       sorter: true,
     },
     {
-      title:"Date updated",
+      title: "Date updated",
       dataIndex: "createdAt",
       render: (text) => {
-        return(
-          moment(text).format('DD-MM-YYYY HH:mm:ss')
-        )
+        return moment(text).format("DD-MM-YYYY HH:mm:ss");
       },
       sorter: true,
     },
@@ -95,7 +95,13 @@ const TableUser = () => {
           <Button type="primary" icon={<CloudUploadOutlined />}>
             Export
           </Button>
-          <Button type="primary" icon={<CloudDownloadOutlined />}>
+          <Button
+            type="primary"
+            icon={<CloudDownloadOutlined />}
+            onClick={() => {
+              setUpLoadMd(true);
+            }}
+          >
             Import
           </Button>
           <Button
@@ -207,6 +213,9 @@ const TableUser = () => {
         setIsOpen={setIsOpen}
         getUser={getUser}
       />
+      {/* Upload file  */}
+
+      <UploadByFile uploadMD={uploadMD} setUpLoadMd={setUpLoadMd} />
     </>
   );
 };

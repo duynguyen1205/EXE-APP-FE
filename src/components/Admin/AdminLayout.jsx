@@ -8,7 +8,7 @@ import {
   DollarCircleOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Dropdown, Space, message } from "antd";
+import { Layout, Menu, Dropdown, Space, message, Avatar } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -64,10 +64,15 @@ const AdminLayout = () => {
       navigate("/");
     }
   };
+
   const itemDropdown = [
     {
       label: <label>Account Manager</label>,
       key: "account",
+    },
+    {
+      label: <a href="/">Home Page</a>,
+      key: "homepage",
     },
     {
       label: (
@@ -78,6 +83,9 @@ const AdminLayout = () => {
       key: "logout",
     },
   ];
+
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
     return (
       <Layout
         style={{
@@ -117,7 +125,8 @@ const AdminLayout = () => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  Welcome {user?.fullName}
+                <Avatar src={urlAvatar}/>
+                  {user?.fullName}
                   <DownOutlined />
                 </Space>
               </a>
