@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Table, Row, Col, Button, Space, Drawer } from "antd";
-import { getAllUsers } from "../../../services/api";
+import {
+  Table,
+  Row,
+  Col,
+  Button,
+  Space,
+  message,
+  notification,
+  Popconfirm,
+} from "antd";
+import { deleteUserApi, getAllUsers } from "../../../services/api";
 import AdvancedSearchForm from "./inputSearch";
 import { MdDelete } from "react-icons/md";
 import {
@@ -8,11 +17,14 @@ import {
   CloudDownloadOutlined,
   CloudUploadOutlined,
   PlusOutlined,
+  EditTwoTone,
 } from "@ant-design/icons";
 import UserDetail from "./UserDetail";
 import AddUserModal from "./ModalAddUser";
 import moment from "moment";
 import UploadByFile from "./UploadByFile";
+import * as XLSX from "xlsx";
+import UpdateUser from "./ModalUpdateUser";
 
 const TableUser = () => {
   const [listUser, setListUser] = useState([]);
@@ -26,7 +38,8 @@ const TableUser = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadMD, setUpLoadMd] = useState(false);
-
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState({});
   // columns
   const columns = [
     {
@@ -61,7 +74,7 @@ const TableUser = () => {
     },
     {
       title: "Date updated",
-      dataIndex: "createdAt",
+      dataIndex: "updatedAt",
       render: (text) => {
         return moment(text).format("DD-MM-YYYY HH:mm:ss");
       },
@@ -70,11 +83,38 @@ const TableUser = () => {
     {
       title: "Action",
       render: (text, record, index) => {
-        const style = { color: "red", fontSize: "1em" };
+        const style = {
+          color: "red",
+          fontSize: "1em",
+          margin: "0 20",
+          cursor: "pointer",
+        };
         return (
-          <>
-            <MdDelete style={style} />
-          </>
+          <div>
+            <Popconfirm
+              title="Delete user"
+              description="Are you sure to delete this user?"
+              onConfirm={() => {
+                deleteUser(record._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+              placement="left"
+            >
+              <span>
+                <MdDelete style={style} />
+              </span>
+            </Popconfirm>
+
+            <EditTwoTone
+              twoToneColor="#F57800"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setDataUpdate(record);
+                setIsOpenUpdate(true);
+              }}
+            />
+          </div>
         );
       },
     },
@@ -92,7 +132,11 @@ const TableUser = () => {
       <p>Table list user</p>
       <div>
         <Space>
-          <Button type="primary" icon={<CloudUploadOutlined />}>
+          <Button
+            type="primary"
+            icon={<CloudUploadOutlined />}
+            onClick={() => exportFile(listUser)}
+          >
             Export
           </Button>
           <Button
@@ -172,6 +216,32 @@ const TableUser = () => {
     setFilters(query);
   };
 
+  const exportFile = (data) => {
+    if (data.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+      //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+      XLSX.writeFile(workbook, "ExportUser.xlsx");
+    } else {
+      message.error("Created user successfully");
+    }
+  };
+
+  const deleteUser = async (id) => {
+    const res = await deleteUserApi(id);
+    console.log(res);
+    if (res && res.data) {
+      message.success("User deleted successfully");
+      getUser()
+    } else {
+      notification.error({
+        description: "Error",
+        message: res.message,
+      });
+    }
+  };
   return (
     <>
       <Row gutter={[20, 20]}>
@@ -215,7 +285,20 @@ const TableUser = () => {
       />
       {/* Upload file  */}
 
-      <UploadByFile uploadMD={uploadMD} setUpLoadMd={setUpLoadMd} />
+      <UploadByFile
+        uploadMD={uploadMD}
+        setUpLoadMd={setUpLoadMd}
+        getUser={getUser}
+      />
+
+      {/* Update user */}
+      <UpdateUser
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+        isOpenUpdate={isOpenUpdate}
+        setIsOpenUpdate={setIsOpenUpdate}
+        getUser={getUser}
+      />
     </>
   );
 };

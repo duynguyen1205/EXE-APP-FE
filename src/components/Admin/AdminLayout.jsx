@@ -123,7 +123,7 @@ const AdminLayout = () => {
               }}
               trigger={["click"]}
             >
-              <a onClick={(e) => e.preventDefault()}>
+              <a className="admin-href" onClick={(e) => e.preventDefault()}>
                 <Space>
                 <Avatar src={urlAvatar}/>
                   {user?.fullName}
