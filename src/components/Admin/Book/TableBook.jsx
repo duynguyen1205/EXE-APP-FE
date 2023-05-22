@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { getAllBook } from "../../../services/api";
 import moment from "moment";
 import BookDetail from "./BookDetail";
+import ModalAddBook from "./ModalAddBook";
 
 const TableBook = () => {
   const [listBook, setListBook] = useState([]);
@@ -22,6 +23,7 @@ const TableBook = () => {
   const [sortQuery, setSortQuery] = useState("&sort=-updatedAt");
   const [dataBook, setDataBook] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const columns = [
     {
       title: "ID",
@@ -125,7 +127,7 @@ const TableBook = () => {
               setIsModalOpen(true);
             }}
           >
-            New User
+            New Book
           </Button>
           <Button
             type="ghost"
@@ -221,6 +223,13 @@ const TableBook = () => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />
+
+    {/* Create new book */}
+
+    <ModalAddBook
+      openModalCreate = {isModalOpen}
+      setOpenModalCreate = {setIsModalOpen}
+    />
     </>
   );
 };
