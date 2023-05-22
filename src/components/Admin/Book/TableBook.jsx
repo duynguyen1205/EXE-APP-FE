@@ -22,7 +22,6 @@ const TableBook = () => {
   const [sortQuery, setSortQuery] = useState("&sort=-updatedAt");
   const [dataBook, setDataBook] = useState();
   const [isOpen, setIsOpen] = useState(false);
-  console.log(">>>>>", dataBook);
   const columns = [
     {
       title: "ID",

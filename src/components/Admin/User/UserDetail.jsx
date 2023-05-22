@@ -6,7 +6,6 @@ const UserDetail = (props) => {
   const open = props.isOpen;
   const onClose = () => {
     props.setIsOpen(false);
-    props.setDataUser(null);
   };
 
   return (
@@ -33,7 +32,7 @@ const UserDetail = (props) => {
             {moment(data?.createdAt).format('DD-MM-YYYY HH:mm:ss')}
           </Descriptions.Item>
           <Descriptions.Item label="Update At">
-          {moment(data?.updateAt).format('DD-MM-YYYY HH:mm:ss')}
+          {moment(data?.updatedAt).format('DD-MM-YYYY HH:mm:ss')}
           </Descriptions.Item>
         </Descriptions>
       </Drawer>

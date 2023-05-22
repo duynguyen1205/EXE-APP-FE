@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Drawer, Badge, Descriptions, Divider, Modal, Upload } from "antd";
 import moment from "moment/moment";
+import { v4 as uuidv4 } from 'uuid';
 
 const BookDetail = (props) => {
   const data = props.data;
@@ -8,33 +9,10 @@ const BookDetail = (props) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-2",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-3",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-4",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
-  const handleCancel = () => setPreviewOpen(false);
+  const [fileList, setFileList] = useState([]);
+  const handleCancel = () => {
+    setPreviewOpen(false); 
+  };
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -50,6 +28,30 @@ const BookDetail = (props) => {
     props.setIsOpen(false);
     props.setDataBook(null);
   };
+  useEffect(() => {
+    if(data) {
+      let imgThumbnail = {}, imgSilder = [];
+      if(data.thumbnail) {
+        imgThumbnail = {
+          uid: uuidv4(),
+          name: data.thumbnail,
+          status: "done",
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${data.thumbnail}`,
+        }
+      }
+      if(data.slider && data.slider.length > 0) {
+        data.slider.map(item => {
+          imgSilder.push({
+            uid: uuidv4(),
+            name: item,
+            status: "done",
+            url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+          })
+        })
+      }
+      setFileList([imgThumbnail, ...imgSilder])
+    }
+  }, [data]);
   return (
     <>
       <Drawer
@@ -74,7 +76,7 @@ const BookDetail = (props) => {
             {moment(data?.createdAt).format("DD-MM-YYYY HH:mm:ss")}
           </Descriptions.Item>
           <Descriptions.Item label="Update At">
-            {moment(data?.updateAt).format("DD-MM-YYYY HH:mm:ss")}
+            {moment(data?.updatedAt).format("DD-MM-YYYY HH:mm:ss")}
           </Descriptions.Item>
         </Descriptions>
         <Divider orientation="left">Book image</Divider>
@@ -84,9 +86,7 @@ const BookDetail = (props) => {
           fileList={fileList}
           onPreview={handlePreview}
           onChange={handleChange}
-          showUploadList={
-            {showPreviewIcon: false}
-          }
+          showUploadList={{ showRemoveIcon: false }}
         ></Upload>
         <Modal
           open={previewOpen}
