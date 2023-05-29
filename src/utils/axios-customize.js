@@ -56,15 +56,15 @@ instance.interceptors.response.use(
       }
     }
 
-    if (
-      error.config &&
-      error.response &&
-      +error.response.status === 400 &&
-      error.config.url === "/api/v1/auth/refresh"
-    ) {
-      if(window.location.href !== "/")
-      window.location.href = "/login";
-    }
+    // if (
+    //   error.config &&
+    //   error.response &&
+    //   +error.response.status === 400 &&
+    //   error.config.url === "/api/v1/auth/refresh"
+    // ) {
+    //   if(window.location.href !== "/")
+    //   window.location.href = "/login";
+    // }
 
     return error?.response?.data ?? Promise.reject(error);
   }

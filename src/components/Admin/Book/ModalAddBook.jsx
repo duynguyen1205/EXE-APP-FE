@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
+  Descriptions,
   Divider,
   Form,
   Input,
@@ -13,7 +14,7 @@ import {
   Select,
   Upload,
 } from "antd";
-import { callFetchCategory } from "../../../services/api";
+import { callFetchCategory, callUploadBookImg, createBook } from "../../../services/api";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 const ModalAddBook = (props) => {
   const { openModalCreate, setOpenModalCreate } = props;
@@ -27,35 +28,64 @@ const ModalAddBook = (props) => {
 
   const [imageUrl, setImageUrl] = useState("");
 
+  const [dataThumbnail, setDataThumbnail] = useState([]);
+  const [dataSlider, setDataSlider] = useState([]);
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
   useEffect(() => {
     const fetchCategory = async () => {
       const res = await callFetchCategory();
       if (res && res.data) {
-        const d = res.data.map((item) => {
+        const data = res.data.map((item) => {
           return { label: item, value: item };
         });
-        setListCategory(d);
+        setListCategory(data);
       }
     };
     fetchCategory();
   }, []);
 
   const onFinish = async (values) => {
-    // const { fullName, password, email, phone } = values;
-    // setIsSubmit(true);
-    // const res = await callCreateAUser(fullName, password, email, phone);
-    // if (res && res.data) {
-    //   message.success("Add new book");
-    //   form.resetFields();
-    //   setOpenModalCreate(false);
-    //   await props.fetchBook();
-    // } else {
-    //   notification.error({
-    //     message: "Đã có lỗi xảy ra",
-    //     description: res.message,
-    //   });
-    // }
-    // setIsSubmit(false);
+    if(dataSlider.length === 0) {
+      notification.error({
+        message:"No slider picture",
+        description: "Silder must have at least one picture"
+      })
+      return;
+    }
+
+    if(dataThumbnail.length === 0) {
+      notification.error({
+        message:"No thumbnail picture",
+        description: "thumbnail must have one picture"
+      })
+      return;
+    }
+
+    const {mainText, author, price, sold, quantity, category} = values;
+    const thumbanil = dataThumbnail[0].name;
+    const slider = dataSlider.map(item => item.name);
+    console.log(mainText, author, price, sold, quantity, category);
+    setIsSubmit(true);
+
+    const res = await createBook(thumbanil, slider, mainText, author, price, sold, quantity, category);
+    if(res && res.data) {
+      message.success("Add book successfully");
+      form.resetFields();
+      setDataThumbnail([]);
+      setDataSlider([]);
+      setOpenModalCreate(false);
+      await props.getBook();
+    }
+    else {
+      console.log("resuls:" , res);
+      message.error("Something went wrong. Try again later.");
+    }
+
+    setIsSubmit(false)
   };
 
   const getBase64 = (img, callback) => {
@@ -90,10 +120,58 @@ const ModalAddBook = (props) => {
     }
   };
 
-  const handleUploadFile = ({ file, onSuccess, onError }) => {
-    setTimeout(() => {
+  const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
+    const res = await callUploadBookImg(file);
+    if (res && res.data) {
+      setDataThumbnail([
+        {
+          name: res.data.fileUploaded,
+          uid: file.uid,
+        },
+      ]);
       onSuccess("ok");
-    }, 1000);
+    } else {
+      onError("Đã có lỗi khi upload file");
+    }
+  };
+
+  const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
+    const res = await callUploadBookImg(file);
+    if (res && res.data) {
+      //copy previous state => upload multiple images
+      //Nếu không có thì khi upload nhiều ảnh nó sẽ không lưu
+      // chỉ lưu 1 ảnh khi upload
+      setDataSlider((dataSlider) => [
+        ...dataSlider,
+        {
+          name: res.data.fileUploaded,
+          uid: file.uid,
+        },
+      ]);
+      onSuccess("ok");
+    } else {
+      onError("Đã có lỗi khi upload file");
+    }
+  };
+
+  const handleRemoveFile = (file, type) => {
+    if (type === "thumbnail") {
+      setDataThumbnail([]);
+    }
+    if (type === "slider") {
+      const newSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      setDataSlider(newSlider);
+    }
+  };
+
+  const handlePreview = async (file) => {
+    getBase64(file.originFileObj, (url) => {
+      setPreviewImage(url);
+      setPreviewOpen(true);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
+    });
   };
 
   return (
@@ -104,7 +182,10 @@ const ModalAddBook = (props) => {
         onOk={() => {
           form.submit();
         }}
-        onCancel={() => setOpenModalCreate(false)}
+        onCancel={() => {
+          form.resetFields();
+          setOpenModalCreate(false);
+        }}
         okText={"Create a new book"}
         cancelText={"Cancel"}
         confirmLoading={isSubmit}
@@ -115,7 +196,7 @@ const ModalAddBook = (props) => {
       >
         <Divider />
 
-        <Form form={form} name="basic" onFinish={onFinish} autoComplete="off">
+        <Form form={form} name="basic" onFinish={onFinish} autoComplete="off" >
           <Row gutter={15}>
             <Col span={12}>
               <Form.Item
@@ -164,7 +245,7 @@ const ModalAddBook = (props) => {
                 rules={[{ required: true, message: "Please select category!" }]}
               >
                 <Select
-                //   defaultValue={null}
+                  // defaultValue={null}
                   showSearch
                   allowClear
                   //  onChange={handleChange}
@@ -187,17 +268,11 @@ const ModalAddBook = (props) => {
                 labelCol={{ span: 24 }}
                 label="Sold"
                 name="sold"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter the quantity sold!",
-                  },
-                ]}
                 initialValue={0}
               >
                 <InputNumber
                   min={0}
-                //   defaultValue={0}
+                    // defaultValue={0}
                   style={{ width: "100%" }}
                 />
               </Form.Item>
@@ -214,9 +289,11 @@ const ModalAddBook = (props) => {
                   className="avatar-uploader"
                   maxCount={1}
                   multiple={false}
-                  customRequest={handleUploadFile}
+                  customRequest={handleUploadFileThumbnail}
                   beforeUpload={beforeUpload}
                   onChange={handleChange}
+                  onPreview={handlePreview}
+                  onRemove={(file) => handleRemoveFile(file, "thumbnail")}
                 >
                   <div>
                     {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -236,9 +313,11 @@ const ModalAddBook = (props) => {
                   name="slider"
                   listType="picture-card"
                   className="avatar-uploader"
-                  customRequest={handleUploadFile}
+                  customRequest={handleUploadFileSlider}
                   beforeUpload={beforeUpload}
                   onChange={(info) => handleChange(info, "slider")}
+                  onRemove={(file) => handleRemoveFile(file, "slider")}
+                  onPreview={handlePreview}
                 >
                   <div>
                     {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />}
@@ -249,6 +328,14 @@ const ModalAddBook = (props) => {
             </Col>
           </Row>
         </Form>
+      </Modal>
+      <Modal
+        open={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={() => setPreviewOpen(false)}
+      >
+        <img alt="example" style={{ width: "100%" }} src={previewImage} />
       </Modal>
     </>
   );

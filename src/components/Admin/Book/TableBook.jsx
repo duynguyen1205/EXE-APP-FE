@@ -229,6 +229,7 @@ const TableBook = () => {
     <ModalAddBook
       openModalCreate = {isModalOpen}
       setOpenModalCreate = {setIsModalOpen}
+      getBook = {getBook}
     />
     </>
   );

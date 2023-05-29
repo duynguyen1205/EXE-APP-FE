@@ -67,8 +67,9 @@ const BookDetail = (props) => {
             {data?.mainText}
           </Descriptions.Item>
           <Descriptions.Item label="Author">{data?.author}</Descriptions.Item>
-          <Descriptions.Item label="Price">{data?.price} đ</Descriptions.Item>
-
+          <Descriptions.Item label="Price">{data?.price} VND</Descriptions.Item>
+          <Descriptions.Item label="Quantity">{data?.quantity}</Descriptions.Item>
+          <Descriptions.Item label="Sold">{data?.sold}</Descriptions.Item>
           <Descriptions.Item label="Category" span={2}>
             <Badge status="processing" text={data?.category} />
           </Descriptions.Item>
