@@ -1,4 +1,4 @@
-import { Button, Col, Row, Space, Table } from "antd";
+import { Button, Col, Popconfirm, Row, Space, Table, message, notification } from "antd";
 import BookSearchForm from "./BookSearch";
 import { MdDelete } from "react-icons/md";
 import {
@@ -8,10 +8,11 @@ import {
   ReloadOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { getAllBook } from "../../../services/api";
+import { deleteBook, getAllBook } from "../../../services/api";
 import moment from "moment";
 import BookDetail from "./BookDetail";
 import ModalAddBook from "./ModalAddBook";
+import BookUpdate from "./BookUpdate";
 
 const TableBook = () => {
   const [listBook, setListBook] = useState([]);
@@ -24,6 +25,7 @@ const TableBook = () => {
   const [dataBook, setDataBook] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const columns = [
     {
       title: "ID",
@@ -90,8 +92,28 @@ const TableBook = () => {
         };
         return (
           <div>
-            <MdDelete style={style} />
-            <EditTwoTone twoToneColor="#F57800" style={{ cursor: "pointer" }} />
+            <Popconfirm
+              title="Delete user"
+              description="Are you sure to delete this book?"
+              onConfirm={() => {
+                handleDeleteBook(record._id);
+              }}
+              okText="Yes"
+              cancelText="No"
+              placement="left"
+            >
+              <span>
+                <MdDelete style={style} />
+              </span>
+            </Popconfirm>
+            <EditTwoTone
+              twoToneColor="#F57800"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setOpenModalUpdate(true);
+                setDataBook(record);
+              }}
+            />
           </div>
         );
       },
@@ -183,6 +205,20 @@ const TableBook = () => {
   const handleSearchBook = (query) => {
     setFilters(query);
   };
+
+  const handleDeleteBook = async (id) => {
+    const res = await deleteBook(id);
+    if(res && res.data) {
+      message.success("Delete Book Sucessfully");
+      getBook();
+    }
+    else {
+      notification.error({
+        message: "Error deleting",
+        description: res.message
+      })
+    }
+  }
   return (
     <>
       <Row gutter={[24, 24]}>
@@ -224,13 +260,21 @@ const TableBook = () => {
         setIsOpen={setIsOpen}
       />
 
-    {/* Create new book */}
+      {/* Create new book */}
+      <ModalAddBook
+        openModalCreate={isModalOpen}
+        setOpenModalCreate={setIsModalOpen}
+        getBook={getBook}
+      />
+      {/* Update book !important */}
 
-    <ModalAddBook
-      openModalCreate = {isModalOpen}
-      setOpenModalCreate = {setIsModalOpen}
-      getBook = {getBook}
-    />
+      <BookUpdate
+        openModalUpdate={openModalUpdate}
+        setOpenModalUpdate={setOpenModalUpdate}
+        dataUpdate = {dataBook}
+        setDataUpdate = {setDataBook}
+        getBook={getBook}
+      />
     </>
   );
 };
