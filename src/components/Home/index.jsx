@@ -10,6 +10,7 @@ import {
   Rate,
   Tabs,
   Pagination,
+  Spin,
 } from "antd";
 import "./home.scss";
 import { useEffect, useState } from "react";
@@ -27,34 +28,52 @@ const Home = () => {
   const [sortQuery, setSortQuery] = useState("&sort=-sold");
   const [form] = Form.useForm();
   const handleChangeFilter = (changedValues, values) => {
-    console.log(">>> check handleChangeFilter", changedValues, values);
+    // console.log(">>> check handleChangeFilter", changedValues, values);
+
+    if (changedValues.category) {
+      let listcate = values.category;
+      if (listcate && listcate.length > 0) {
+        const list = listcate.join(",");
+        setFilters(`&category=${list}`);
+      } else {
+        setFilters("");
+      }
+    }
   };
 
-  const onFinish = (values) => {};
-
-  const onChange = (key) => {
-    console.log(key);
+  const onFinish = (values) => {
+    if (values?.range?.from >= 0 && values?.range?.to >= 0) {
+      console.log("hello");
+      // tạo ra filter để price
+      let price = `price>=${values?.range?.from}&price<=${values?.range?.to}`;
+      // kiểm tra xem có cate không để gộp chung
+      if (values?.category?.length) {
+        const cate = values?.category?.join(",");
+        price += `&category=${cate}`;
+      }
+      setFilters(price);
+    }
   };
 
   const items = [
     {
-      key: "1",
-      label: `Phổ biến`,
+      key: "&sort=-sold",
+      label: `Popular`,
       children: <></>,
     },
     {
-      key: "2",
-      label: `Hàng Mới`,
+      key: "&sort=updateAt",
+      label: `New Product`,
       children: <></>,
     },
     {
-      key: "3",
-      label: `Giá Thấp Đến Cao`,
+      key: "&sort=price",
+      label: `Price Low To High`,
       children: <></>,
     },
     {
-      key: "4",
-      label: `Giá Cao Đến Thấp`,
+      key: "&sort=-price",
+      label: `Price High To Low`,
       children: <></>,
     },
   ];
@@ -125,7 +144,9 @@ const Home = () => {
                 </span>
                 <ReloadOutlined
                   title="Reset"
-                  onClick={() => form.resetFields()}
+                  onClick={() => {
+                    form.resetFields(), setFilters("");
+                  }}
                   style={{ marginTop: 4 }}
                 />
               </div>
@@ -255,68 +276,77 @@ const Home = () => {
             </div>
           </Col>
           <Col md={19} xs={24}>
-            <div
-              style={{
-                padding: "20px",
-                backgroundColor: "#fff",
-                borderRadius: "5px",
-              }}
-            >
-              <Row>
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-              </Row>
-              <Row className="customize-row">
-                {listBook?.map((item, index) => {
-                  return (
-                    <div
-                      className="column"
-                      key={`book-${index}`}
-                      onClick={() => handleRedirectBook(item)}
-                    >
-                      <div className="wrapper">
-                        <div className="thumbnail">
-                          <img
-                            src={`${
-                              import.meta.env.VITE_BACKEND_URL
-                            }/images/book/${item.thumbnail}`}
-                            alt="thumbnail book"
-                          />
-                        </div>
-                        <div className="text" title={item.mainText}>
-                          {item.mainText}
-                        </div>
-                        <div className="price">
-                          {new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          }).format(item?.price ?? 0)}
-                        </div>
-                        <div className="rating">
-                          <Rate
-                            value={5}
-                            disabled
-                            style={{ color: "#ffce3d", fontSize: 10 }}
-                          />
-                          <span>Đã bán {item.sold}</span>
+            <Spin spinning={isLoading} tip="Loading....">
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#fff",
+                  borderRadius: "5px",
+                }}
+              >
+                <Row>
+                  <Tabs
+                    defaultActiveKey="&sort=-sold"
+                    items={items}
+                    onChange={(value) => {
+                      setSortQuery(value);
+                    }}
+                    style={{ overflowX: "auto" }}
+                  />
+                </Row>
+                <Row className="customize-row">
+                  {listBook?.map((item, index) => {
+                    return (
+                      <div
+                        className="column"
+                        key={`book-${index}`}
+                        onClick={() => handleRedirectBook(item)}
+                      >
+                        <div className="wrapper">
+                          <div className="thumbnail">
+                            <img
+                              src={`${
+                                import.meta.env.VITE_BACKEND_URL
+                              }/images/book/${item.thumbnail}`}
+                              alt="thumbnail book"
+                            />
+                          </div>
+                          <div className="text" title={item.mainText}>
+                            {item.mainText}
+                          </div>
+                          <div className="price">
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(item?.price ?? 0)}
+                          </div>
+                          <div className="rating">
+                            <Rate
+                              value={5}
+                              disabled
+                              style={{ color: "#ffce3d", fontSize: 10 }}
+                            />
+                            <span>Đã bán {item.sold}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </Row>
-              <div style={{ marginTop: 30 }}></div>
-              <Row style={{ display: "flex", justifyContent: "center" }}>
-                <Pagination
-                  current={current}
-                  total={total}
-                  pageSize={pageSize}
-                  responsive
-                  onChange={(p, s) =>
-                    handleOnchangePage({ current: p, pageSize: s })
-                  }
-                />
-              </Row>
-            </div>
+                    );
+                  })}
+                </Row>
+                <div style={{ marginTop: 30 }}></div>
+                <Row style={{ display: "flex", justifyContent: "center" }}>
+                  <Pagination
+                    current={current}
+                    total={total}
+                    pageSize={pageSize}
+                    responsive
+                    onChange={(p, s) =>
+                      handleOnchangePage({ current: p, pageSize: s })
+                    }
+                  />
+                </Row>
+              </div>
+            </Spin>
           </Col>
         </Row>
       </div>
