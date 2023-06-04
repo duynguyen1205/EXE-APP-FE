@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/Admin/AdminLayout";
 import CrudPage from "./pages/CRUD";
 import "./styles/reset.scss";
+import TableBook from "./components/Admin/Book/TableBook";
 const Layout = () => {
   return (
     <div className="layout-page">
@@ -67,7 +68,7 @@ export default function App() {
         },
         {
           path: "book",
-          element: <BookPage />,
+          element: <TableBook />,
         },
       ],
     },
@@ -84,7 +85,7 @@ export default function App() {
           element: <ContactPage />,
         },
         {
-          path: "book",
+          path: "book/:slug",
           element: <BookPage />,
         },
       ],

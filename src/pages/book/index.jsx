@@ -1,10 +1,14 @@
-import TableBook from "../../components/Admin/Book/TableBook";
+import { useLocation } from "react-router-dom";
+
 
 
 const BookPage = () => {
+    let location = useLocation();
+    let params = new URLSearchParams(location.search);
+    const id = params?.get("id")// get book id
     return (
         <>
-            <TableBook/>
+            Book deatail page: {id}
         </>
     )
 }
