@@ -86,3 +86,7 @@ export const updateBook = (
 export const deleteBook = (id) => {
   return axios.delete( `/api/v1/book/${id}`);
 }
+
+export const getBookByID = (id) => {
+  return axios.get( `/api/v1/book/${id}`);
+}
