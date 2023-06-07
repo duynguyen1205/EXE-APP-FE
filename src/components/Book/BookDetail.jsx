@@ -1,4 +1,4 @@
-import { Row, Col, Rate, Divider, Button } from "antd";
+import { Row, Col, Rate, Divider, Button, notification, message } from "antd";
 import ImageGallery from "react-image-gallery";
 import "./book.scss";
 import { useRef, useState } from "react";
@@ -6,12 +6,15 @@ import ModalGallery from "./ModalGallery";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { BsCartPlus } from "react-icons/bs";
 import BookLoader from "./BookLoader";
+import { useDispatch } from "react-redux";
+import { doAddToCartAction } from "../../redux/order/orderSilce";
 const BookDeatail = (props) => {
+  const dispatch = useDispatch();
   const dataBook = props;
 
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [ currentQuantity, setCurrentQuantity ] = useState(1);
   const refGallery = useRef(null);
 
   const images = dataBook?.data?.items ?? [];
@@ -22,9 +25,41 @@ const BookDeatail = (props) => {
     setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0);
     // refGallery?.current?.fullScreen()
   };
-  console.log(dataBook);
-  const onChange = (value) => {
-    console.log("changed", value);
+  const onChangeButton = (value) => {
+    if (value === "PLUS") {
+      if (currentQuantity >= dataBook.data.quantity) {
+        notification.error({
+          message: "Invalid quantity",
+          description: "Maximum quantity",
+        });
+        return
+      } else {
+        setCurrentQuantity(currentQuantity + 1)
+      }
+    }
+    if (value === "MINUS") {
+      if (currentQuantity - 1 <= 0) {
+        notification.error({
+          message: "Invalid quantity",
+          description: "Can not change quantity to 0",
+        });
+        return
+      }
+      else {
+        setCurrentQuantity(currentQuantity - 1)
+      }
+    }
+  };
+  const handleInput = (value) => {
+    // + biến thành số
+    if(!isNaN(value)) { // not a number
+      if(+value > 0 && +value < +dataBook.data.quantity) {
+        setCurrentQuantity(+value)
+      }
+    }
+  }
+  const handleAddBook = (quantity, dataBook) => {
+      dispatch(doAddToCartAction({ quantity, detail: dataBook.data, _id: dataBook.data._id }));
   };
   return (
     <div style={{ background: "#efefef", padding: "20px 0" }}>
@@ -80,7 +115,10 @@ const BookDeatail = (props) => {
                     </span>
                     <span className="sold">
                       <Divider type="vertical" />
-                     <span style={{fontWeight:"bolder"}}>Remaining: </span>  {dataBook.data.quantity}
+                      <span style={{ fontWeight: "bolder" }}>
+                        Remaining:{" "}
+                      </span>{" "}
+                      {dataBook.data.quantity}
                     </span>
                   </div>
                   <div className="price">
@@ -100,21 +138,24 @@ const BookDeatail = (props) => {
                   <div className="quantity">
                     <span className="left">Quantity</span>
                     <span className="right">
-                      <button>
+                      <button onClick={()=> onChangeButton("MINUS")}>
                         <MinusOutlined />
                       </button>
-                      <input defaultValue={1} />
-                      <button>
+                      <input onChange={(event) => handleInput(event.target.value)} value={currentQuantity} />
+                      <button onClick={()=> onChangeButton("PLUS")}>
                         <PlusOutlined />
                       </button>
                     </span>
                   </div>
                   <div className="buy">
-                    <button className="cart">
+                    <button
+                      className="cart"
+                      onClick={() => handleAddBook(currentQuantity, dataBook)}
+                    >
                       <BsCartPlus className="icon-cart" />
-                      <span>Thêm vào giỏ hàng</span>
+                      <span>Add to carts </span>
                     </button>
-                    <button className="now">Mua ngay</button>
+                    <button className="now">Buy now</button>
                   </div>
                 </Col>
               </Col>

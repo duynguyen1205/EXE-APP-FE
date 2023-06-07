@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./components/Admin/AdminLayout";
 import CrudPage from "./pages/CRUD";
 import "./styles/reset.scss";
+import "./styles/global.scss";
 import TableBook from "./components/Admin/Book/TableBook";
 const Layout = () => {
   return (
@@ -30,7 +31,7 @@ const Layout = () => {
 
 export default function App() {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.account.isLoading);
+  const isAuthen = useSelector((state) => state.account.isAuthorized);
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
@@ -102,15 +103,15 @@ export default function App() {
   ]);
   return (
     <>
-      {isLoading === false ||
+      {/* {isAuthen === true ||
       window.location.pathname === "/login" ||
       window.location.pathname === "/register" ||
       window.location.pathname === "/" ? (
         <RouterProvider router={router} />
       ) : (
-        <Loading />
-        
-      )}
+        <Loading/>
+      )} */}
+      <RouterProvider router={router} />
     </>
   );
 }
