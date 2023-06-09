@@ -8,16 +8,18 @@ import { BsCartPlus } from "react-icons/bs";
 import BookLoader from "./BookLoader";
 import { useDispatch } from "react-redux";
 import { doAddToCartAction } from "../../redux/order/orderSilce";
+import { useNavigate } from "react-router-dom";
 const BookDeatail = (props) => {
   const dispatch = useDispatch();
   const dataBook = props;
 
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [ currentQuantity, setCurrentQuantity ] = useState(1);
+  const [currentQuantity, setCurrentQuantity] = useState(1);
   const refGallery = useRef(null);
 
   const images = dataBook?.data?.items ?? [];
+  const navigate = useNavigate();
   const handleOnClickImage = () => {
     //get current index onClick
     // alert(refGallery?.current?.getCurrentIndex());
@@ -32,34 +34,40 @@ const BookDeatail = (props) => {
           message: "Invalid quantity",
           description: "Maximum quantity",
         });
-        return
+        return;
       } else {
-        setCurrentQuantity(currentQuantity + 1)
+        setCurrentQuantity(currentQuantity + 1);
       }
     }
     if (value === "MINUS") {
       if (currentQuantity - 1 <= 0) {
         notification.error({
-          message: "Invalid quantity",
+          message: "Invalid",
           description: "Can not change quantity to 0",
         });
-        return
-      }
-      else {
-        setCurrentQuantity(currentQuantity - 1)
+        return;
+      } else {
+        setCurrentQuantity(currentQuantity - 1);
       }
     }
   };
   const handleInput = (value) => {
     // + biến thành số
-    if(!isNaN(value)) { // not a number
-      if(+value > 0 && +value < +dataBook.data.quantity) {
-        setCurrentQuantity(+value)
+    if (!isNaN(value)) {
+      // not a number
+      if (+value > 0 && +value < +dataBook.data.quantity) {
+        setCurrentQuantity(+value);
       }
     }
-  }
+  };
   const handleAddBook = (quantity, dataBook) => {
-      dispatch(doAddToCartAction({ quantity, detail: dataBook.data, _id: dataBook.data._id }));
+    dispatch(
+      doAddToCartAction({
+        quantity,
+        detail: dataBook.data,
+        _id: dataBook.data._id,
+      })
+    );
   };
   return (
     <div style={{ background: "#efefef", padding: "20px 0" }}>
@@ -138,11 +146,14 @@ const BookDeatail = (props) => {
                   <div className="quantity">
                     <span className="left">Quantity</span>
                     <span className="right">
-                      <button onClick={()=> onChangeButton("MINUS")}>
+                      <button onClick={() => onChangeButton("MINUS")}>
                         <MinusOutlined />
                       </button>
-                      <input onChange={(event) => handleInput(event.target.value)} value={currentQuantity} />
-                      <button onClick={()=> onChangeButton("PLUS")}>
+                      <input
+                        onChange={(event) => handleInput(event.target.value)}
+                        value={currentQuantity}
+                      />
+                      <button onClick={() => onChangeButton("PLUS")}>
                         <PlusOutlined />
                       </button>
                     </span>
@@ -155,7 +166,15 @@ const BookDeatail = (props) => {
                       <BsCartPlus className="icon-cart" />
                       <span>Add to carts </span>
                     </button>
-                    <button className="now">Buy now</button>
+                    <button
+                      onClick={() => {
+                        handleAddBook(currentQuantity, dataBook),
+                          navigate("/order");
+                      }}
+                      className="now"
+                    >
+                      Buy now
+                    </button>
                   </div>
                 </Col>
               </Col>

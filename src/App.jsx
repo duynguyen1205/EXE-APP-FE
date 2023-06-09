@@ -19,6 +19,7 @@ import CrudPage from "./pages/CRUD";
 import "./styles/reset.scss";
 import "./styles/global.scss";
 import TableBook from "./components/Admin/Book/TableBook";
+import OrderPage from "./pages/order";
 const Layout = () => {
   return (
     <div className="layout-page">
@@ -89,6 +90,10 @@ export default function App() {
           path: "book/:slug",
           element: <BookPage />,
         },
+        {
+          path: "order",
+          element: <OrderPage />,
+        }
       ],
     },
 

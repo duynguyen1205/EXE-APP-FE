@@ -76,7 +76,7 @@ const Header = () => {
         })}
       </div>
       <div className="popover-cart-footer">
-        <button>View detail </button>
+        <button onClick={()=> navigate("/order")}>View detail </button>
       </div>
     </div>
   );
@@ -116,7 +116,7 @@ const Header = () => {
                   className="popover-carts"
                   rootClassName="popover-carts"
                 >
-                  <Badge count={orderNumber?.length ?? 0} size={"small"}>
+                  <Badge count={orderNumber?.length ?? 0} showZero size={"small"}>
                     <FiShoppingCart className="icon-cart" />
                   </Badge>
                 </Popover>

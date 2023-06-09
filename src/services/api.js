@@ -66,27 +66,59 @@ export const callUploadBookImg = (fileImg) => {
 };
 
 export const createBook = (
-  thumbnail, slider, mainText, author, price, sold, quantity, category
+  thumbnail,
+  slider,
+  mainText,
+  author,
+  price,
+  sold,
+  quantity,
+  category
 ) => {
-  return axios.post(
-    "/api/v1/book/",
-    {thumbnail, slider, mainText, author, price, sold, quantity, category}
-  );
+  return axios.post("/api/v1/book/", {
+    thumbnail,
+    slider,
+    mainText,
+    author,
+    price,
+    sold,
+    quantity,
+    category,
+  });
 };
 
 export const updateBook = (
-  _id,thumbnail, slider, mainText, author, price, sold, quantity, category
+  _id,
+  thumbnail,
+  slider,
+  mainText,
+  author,
+  price,
+  sold,
+  quantity,
+  category
 ) => {
-  return axios.put(
-    `/api/v1/book/${_id}`,
-    {thumbnail, slider, mainText, author, price, sold, quantity, category}
-  );
+  return axios.put(`/api/v1/book/${_id}`, {
+    thumbnail,
+    slider,
+    mainText,
+    author,
+    price,
+    sold,
+    quantity,
+    category,
+  });
 };
 
 export const deleteBook = (id) => {
-  return axios.delete( `/api/v1/book/${id}`);
-}
+  return axios.delete(`/api/v1/book/${id}`);
+};
 
 export const getBookByID = (id) => {
-  return axios.get( `/api/v1/book/${id}`);
-}
+  return axios.get(`/api/v1/book/${id}`);
+};
+
+//order
+export const callPlaceOrder = (data) => {
+  return axios.post("/api/v1/order/", { ...data });
+};

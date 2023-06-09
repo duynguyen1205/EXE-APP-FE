@@ -1,0 +1,135 @@
+.order-contanier {
+  .order-book {
+    background-color: white;
+    margin-bottom: 10px;
+    .book-content {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .title {
+        margin-left: 20px;
+        width: 30%;
+      }
+      .price {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      .action {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 400px;
+      }
+    }
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+.sum-container {
+  .order-sum,
+  .caculator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  .currency {
+    font-size: 20px;
+    margin-right: 8px;
+    font-weight: 500;
+    color: #ee4d2d;
+  }
+  .button {
+    display: flex;
+    align-items: center;
+    button {
+      border: 1px solid #ee4d2d;
+      box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 16px;
+      height: 35px;
+      width: 80%;
+      color: #fff;
+      position: relative;
+      overflow: visible;
+      outline: 0;
+      background: #ee4d2d;
+      margin: 20px auto;
+    }
+  }
+}
+.steps-order {
+  margin-bottom: 10px;
+  padding: 20px;
+  background-color: #fff;
+}
+.order-contanier {
+  .payment-book {
+    background-color: white;
+    margin-bottom: 10px;
+    .payment-content {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .title {
+        margin-left: 20px;
+        width: 30%;
+      }
+      .price {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      .action {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 400px;
+      }
+    }
+  }
+  img {
+    width: 100px;
+    height: 100px;
+  }
+}
+.order-contanier {
+  .payment-container {
+    .button {
+      display: flex;
+      align-items: center;
+      button {
+        border: 1px solid #ee4d2d;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.03);
+        cursor: pointer;
+        border-radius: 3px;
+        font-size: 16px;
+        height: 35px;
+        width: 80%;
+        color: #fff;
+        position: relative;
+        overflow: visible;
+        outline: 0;
+        background: #ee4d2d;
+        margin: 20px auto;
+      }
+    }
+    .caculator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+    .currency {
+      font-size: 20px;
+      margin-right: 8px;
+      font-weight: 500;
+      color: #ee4d2d;
+    }
+  }
+}
+
