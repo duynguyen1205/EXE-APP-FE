@@ -4,12 +4,12 @@
         user-select: none;
         -moz-user-select: none;
         -webkit-user-select: none;
-        height: 55px;
+        height: 70px;
         color: #808089;
         width: 100%;
         max-width: 1440px;
         margin: 0 auto;
-        line-height: 55px;
+        line-height: 70px;
         justify-content: center;
 
         &__top {
@@ -84,7 +84,7 @@
         .input-search {
             height: 25px;
             outline: none;
-            padding: 5px 30px;
+            padding: 20px 30px;
             border-radius: 6px;
             border: 1px solid #ddd;
             flex: 1;

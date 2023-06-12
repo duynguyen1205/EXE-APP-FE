@@ -6,18 +6,17 @@ import ModalGallery from "./ModalGallery";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { BsCartPlus } from "react-icons/bs";
 import BookLoader from "./BookLoader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { doAddToCartAction } from "../../redux/order/orderSilce";
 import { useNavigate } from "react-router-dom";
 const BookDeatail = (props) => {
   const dispatch = useDispatch();
   const dataBook = props;
-
+  const user = useSelector((state) => state.account);
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentQuantity, setCurrentQuantity] = useState(1);
   const refGallery = useRef(null);
-
   const images = dataBook?.data?.items ?? [];
   const navigate = useNavigate();
   const handleOnClickImage = () => {
@@ -26,6 +25,17 @@ const BookDeatail = (props) => {
     setIsOpenModalGallery(true);
     setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0);
     // refGallery?.current?.fullScreen()
+  };
+  const checkLoginBuyNow = (value) => {
+    if (user.isAuthorized === true) {
+      handleAddBook(currentQuantity, dataBook)
+      if(value === "BUY") {
+        navigate("/order")
+      }
+    } else {
+      message.error("You need to be logged in first");
+      navigate("/login");
+    }
   };
   const onChangeButton = (value) => {
     if (value === "PLUS") {
@@ -108,7 +118,7 @@ const BookDeatail = (props) => {
                 </Col>
                 <Col span={24}>
                   <div className="author">
-                    Author: <a href="#">{dataBook.data.author}</a>{" "}
+                    Creator: <a href="#">{dataBook.data.author}</a>{" "}
                   </div>
                   <div className="title">{dataBook.data.mainText}</div>
                   <div className="rating">
@@ -161,16 +171,13 @@ const BookDeatail = (props) => {
                   <div className="buy">
                     <button
                       className="cart"
-                      onClick={() => handleAddBook(currentQuantity, dataBook)}
+                      onClick={() => checkLoginBuyNow()}
                     >
                       <BsCartPlus className="icon-cart" />
                       <span>Add to carts </span>
                     </button>
                     <button
-                      onClick={() => {
-                        handleAddBook(currentQuantity, dataBook),
-                          navigate("/order");
-                      }}
+                      onClick={() => checkLoginBuyNow("BUY")}
                       className="now"
                     >
                       Buy now

@@ -71,7 +71,7 @@ const ModalAddBook = (props) => {
 
     const res = await createBook(thumbanil, slider, mainText, author, price, sold, quantity, category);
     if(res && res.data) {
-      message.success("Add book successfully");
+      message.success("Add product successfully");
       form.resetFields();
       setDataThumbnail([]);
       setDataSlider([]);
@@ -175,7 +175,7 @@ const ModalAddBook = (props) => {
   return (
     <>
       <Modal
-        title="Add new book"
+        title="Add new product"
         open={openModalCreate}
         onOk={() => {
           form.submit();
@@ -184,7 +184,7 @@ const ModalAddBook = (props) => {
           form.resetFields();
           setOpenModalCreate(false);
         }}
-        okText={"Create a new book"}
+        okText={"Create a new product"}
         cancelText={"Cancel"}
         confirmLoading={isSubmit}
         width={"50vw"}
@@ -199,7 +199,7 @@ const ModalAddBook = (props) => {
             <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
-                label="Book's Name"
+                label="Product's Name"
                 name="mainText"
                 rules={[
                   { required: true, message: "Please enter a display name!" },
@@ -211,7 +211,7 @@ const ModalAddBook = (props) => {
             <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
-                label="Author"
+                label="Creator"
                 name="author"
                 rules={[{ required: true, message: "Please input author!" }]}
               >

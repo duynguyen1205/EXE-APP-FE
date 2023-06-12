@@ -39,7 +39,7 @@ const items = [
     ],
   },
   {
-    label: <Link to="/admin/book">Manager Books</Link>,
+    label: <Link to="/admin/book">Manager Product</Link>,
     key: "book",
     icon: <ExceptionOutlined />,
   },
@@ -144,7 +144,7 @@ const AdminLayout = () => {
               textAlign: "center",
             }}
           >
-            Ant Design ©2023 Created by Ant UED
+            CiMade Design ©2023 Created by Ant UED
           </Footer>
         </Layout>
       </Layout>

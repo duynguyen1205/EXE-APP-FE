@@ -11,7 +11,7 @@ import { callLogout } from "../../services/api";
 import "./header.scss";
 import { doLogoutAction } from "../../redux/account/accountSilce";
 import { Link } from "react-router-dom";
-
+import { LoginOutlined } from "@ant-design/icons";
 const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const isAuthenticated = useSelector((state) => state.account.isAuthorized);
@@ -35,6 +35,17 @@ const Header = () => {
     },
     {
       label: (
+        <label
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/history")}
+        >
+          Order History
+        </label>
+      ),
+      key: "order_history",
+    },
+    {
+      label: (
         <label style={{ cursor: "pointer" }} onClick={() => handleLogout()}>
           Log out
         </label>
@@ -53,33 +64,42 @@ const Header = () => {
     user?.avatar
   }`;
   const orderNumber = useSelector((state) => state.order.carts);
+  const cartIsEmpty = carts.length === 0;
+
   const content = (
     <div className="popover-cart-body">
-      <div className="popover-cart-content">
-        {carts?.map((book, index) => {
-          return (
-            <div className="book" key={`book-${index}`}>
-              <img
-                src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${
-                  book?.detail.thumbnail
-                }`}
-              />
-              <div>{book?.detail.mainText}</div>
-              <div className="price">
-                {new Intl.NumberFormat("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                }).format(book.detail.price ?? 0)}
+      {cartIsEmpty ? (
+        <div className="image-cart">
+          <p>Nothing in your cart</p>
+        </div>
+      ) : (
+        <div className="popover-cart-content">
+          {carts?.map((book, index) => {
+            return (
+              <div className="book" key={`book-${index}`}>
+                <img
+                  src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${
+                    book?.detail.thumbnail
+                  }`}
+                />
+                <div>{book?.detail.mainText}</div>
+                <div className="price">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(book.detail.price ?? 0)}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
       <div className="popover-cart-footer">
-        <button onClick={()=> navigate("/order")}>View detail </button>
+        <button onClick={() => navigate("/order")}>View detail</button>
       </div>
     </div>
   );
+  
   return (
     <>
       <div className="header-container">
@@ -95,7 +115,7 @@ const Header = () => {
             </div>
             <div className="page-header__logo">
               <span className="logo" onClick={() => navigate("/")}>
-                <SiSololearn className="rotate icon-react" /> DuyShop
+                <SiSololearn className="rotate icon-react" /> CiMade
                 <VscSearchFuzzy className="icon-search" />
               </span>
               <input
@@ -116,7 +136,11 @@ const Header = () => {
                   className="popover-carts"
                   rootClassName="popover-carts"
                 >
-                  <Badge count={orderNumber?.length ?? 0} showZero size={"small"}>
+                  <Badge
+                    count={orderNumber?.length ?? 0}
+                    showZero
+                    size={"small"}
+                  >
                     <FiShoppingCart className="icon-cart" />
                   </Badge>
                 </Popover>
@@ -126,7 +150,10 @@ const Header = () => {
               </li>
               <li className="navigation__item mobile">
                 {!isAuthenticated ? (
-                  <span onClick={() => navigate("/login")}> Account</span>
+                  <span onClick={() => navigate("/login")}>
+                    {" "}
+                    <LoginOutlined style={{ fontSize: 20, color: "red" }} />
+                  </span>
                 ) : (
                   <Dropdown menu={{ items }} trigger={["click"]}>
                     <a onClick={(e) => e.preventDefault()}>

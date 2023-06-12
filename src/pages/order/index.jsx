@@ -7,10 +7,12 @@ import {
 import { useState } from "react";
 import ViewOrder from "../../components/Book/ViewOrder";
 import Payment from "../../components/Book/Payment";
+import { useNavigate } from "react-router-dom";
 const OrderPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const placeOrderStatus = currentStep === 1 ? "process" : "finish";
   const placeOrderIcon = currentStep === 1 ? <LoadingOutlined /> : null;
+  const navigate = useNavigate();
   return (
     <div style={{ background: "#efefef", padding: "20px 0" }}>
       <div
@@ -48,7 +50,7 @@ const OrderPage = () => {
           <Result
             icon={<SmileOutlined />}
             title="Your order has been placed successfully"
-            extra={<Button type="primary">View order history</Button>}
+            extra={<Button type="primary" onClick={()=> navigate("/history")}>View order history</Button>}
           />
         )}
       </div>

@@ -20,6 +20,7 @@ import "./styles/reset.scss";
 import "./styles/global.scss";
 import TableBook from "./components/Admin/Book/TableBook";
 import OrderPage from "./pages/order";
+import HistoryPage from "./pages/history/history";
 const Layout = () => {
   return (
     <div className="layout-page">
@@ -93,6 +94,10 @@ export default function App() {
         {
           path: "order",
           element: <OrderPage />,
+        },
+        {
+          path: "history",
+          element: <HistoryPage />,
         }
       ],
     },

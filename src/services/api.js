@@ -122,3 +122,7 @@ export const getBookByID = (id) => {
 export const callPlaceOrder = (data) => {
   return axios.post("/api/v1/order/", { ...data });
 };
+
+export const getOrderHistory = () => {
+  return axios.get("/api/v1/history");
+}

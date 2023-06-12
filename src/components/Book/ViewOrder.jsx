@@ -45,6 +45,7 @@ const ViewOrder = (props) => {
         <Row gutter={[20, 20]}>
           <Col md={18} xs={24}>
             {carts.map((book, index) => {
+              const currentBookPrice = book?.detail?.price ?? 0;
               return (
                 <div className="order-book" key={`index-${index}`}>
                   <div className="book-content">
@@ -74,7 +75,7 @@ const ViewOrder = (props) => {
                         {new Intl.NumberFormat("vi-VN", {
                           style: "currency",
                           currency: "VND",
-                        }).format(sum ?? 0)}
+                        }).format(currentBookPrice * book.quantity  ?? 0)}
                       </div>
                       <DeleteTwoTone
                         style={{ cursor: "pointer" }}

@@ -379,7 +379,7 @@ const Home = () => {
                               disabled
                               style={{ color: "#ffce3d", fontSize: 10 }}
                             />
-                            <span>Đã bán {item.sold}</span>
+                            <span>Solded {item.sold}</span>
                           </div>
                         </div>
                       </div>

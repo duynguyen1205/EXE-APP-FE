@@ -42,14 +42,14 @@ const BookSearchForm = (props) => {
       <Row gutter={24}>
         {
           <Col span={8}>
-            <Form.Item name="mainText" label="Book Name">
-              <Input placeholder="Learn React" />
+            <Form.Item name="mainText" label="Product Name">
+              <Input placeholder="Lư Đồng" />
             </Form.Item>
           </Col>
         }
         {
           <Col span={8}>
-            <Form.Item name="author" label="Author">
+            <Form.Item name="author" label="Creator">
               <Input placeholder="Eric" />
             </Form.Item>
           </Col>

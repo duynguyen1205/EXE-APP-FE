@@ -44,13 +44,13 @@ const TableBook = () => {
     },
 
     {
-      title: "Book Name",
+      title: "Product Name",
       dataIndex: "mainText",
       sorter: true,
     },
 
     {
-      title: "Category",
+      title: "Creator",
       dataIndex: "category",
       sorter: true,
     },
@@ -132,7 +132,7 @@ const TableBook = () => {
         alignItems: "center",
       }}
     >
-      <p>Table list Book</p>
+      <p>Table list Product</p>
       <div>
         <Space>
           <Button
@@ -149,7 +149,7 @@ const TableBook = () => {
               setIsModalOpen(true);
             }}
           >
-            New Book
+            New Product
           </Button>
           <Button
             type="ghost"
