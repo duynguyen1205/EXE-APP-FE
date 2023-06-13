@@ -10,24 +10,14 @@ const HistoryPage = () => {
   const userId = useSelector((state) => state.account.user.id);
   const columns = [
     {
+      title: "ID",
+      render: (text, record, index) => index + 1,
+    },
+    {
       title: "Time",
       dataIndex: "createdAt",
       render: (text) => {
         return moment(text).format("DD-MM-YYYY HH:mm:ss");
-      },
-    },
-    {
-      title: "Total Pay",
-      dataIndex: "totalPrice",
-      render: (text) => {
-        return <>{text} đ</>;
-      },
-    },
-    {
-      title: "Status",
-      dataIndex: "phone",
-      render: (text) => {
-        return <>{<Tag color="green">Success</Tag>}</>;
       },
     },
     {
@@ -43,10 +33,25 @@ const HistoryPage = () => {
                 collapsed={true}
                 displayDataTypes={false}
                 displayObjectSize={false}
+                enableClipboard={false}
               />
             }
           </>
         );
+      },
+    },
+    {
+      title: "Total Pay",
+      dataIndex: "totalPrice",
+      render: (text) => {
+        return <>{text} đ</>;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "phone",
+      render: (text) => {
+        return <>{<Tag color="green">Success</Tag>}</>;
       },
     },
   ];

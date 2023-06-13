@@ -12,8 +12,10 @@ import "./header.scss";
 import { doLogoutAction } from "../../redux/account/accountSilce";
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@ant-design/icons";
+import ManagerAccount from "../user/ManagerAcount";
 const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const isAuthenticated = useSelector((state) => state.account.isAuthorized);
   const user = useSelector((state) => state.account.user);
   const carts = useSelector((state) => state.order.carts);
@@ -30,7 +32,16 @@ const Header = () => {
   };
   let items = [
     {
-      label: <label style={{ cursor: "pointer" }}>Account Managerment</label>,
+      label: (
+        <label
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            setOpenModal(true);
+          }}
+        >
+          Account Manager
+        </label>
+      ),
       key: "account",
     },
     {
@@ -99,9 +110,9 @@ const Header = () => {
       </div>
     </div>
   );
-  
+
   return (
-    <>
+    <div>
       <div className="header-container">
         <header className="page-header">
           <div className="page-header__top">
@@ -182,7 +193,10 @@ const Header = () => {
         <p>Logout</p>
         <Divider />
       </Drawer>
-    </>
+
+      {/* Account managermen */}
+      <ManagerAccount openModal={openModal} setOpenModal={setOpenModal} />
+    </div>
   );
 };
 
