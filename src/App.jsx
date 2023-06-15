@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
 import ContactPage from "./pages/CRUD";
@@ -22,12 +22,15 @@ import TableBook from "./components/Admin/Book/TableBook";
 import OrderPage from "./pages/order";
 import HistoryPage from "./pages/history/history";
 import OrderManager from "./components/Admin/OrderManager";
+import NotPermited from "./components/ProtectedRoute/NotPermited";
 
 const Layout = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <div className="layout-page">
-      <Header />
-      <Outlet />
+      <Header searchTerm ={searchTerm} setSearchTerm={setSearchTerm}/>
+      <Outlet context={{searchTerm, setSearchTerm}} />
       <Footer />
     </div>
   );
@@ -39,7 +42,8 @@ export default function App() {
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register"
+      window.location.pathname === "/register" ||
+      window.location.pathname === "/"
     )
       return;
     const res = await getUser();
@@ -76,9 +80,9 @@ export default function App() {
           element: <TableBook />,
         },
         {
-          path:"order",
+          path: "order",
           element: <OrderManager />,
-        }
+        },
       ],
     },
 
@@ -99,12 +103,20 @@ export default function App() {
         },
         {
           path: "order",
-          element: <OrderPage />,
+          element: (
+            <ProtectedRoute>
+              <OrderPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "history",
-          element: <HistoryPage />,
-        }
+          element: (
+            <ProtectedRoute>
+              <HistoryPage />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
 
@@ -125,8 +137,9 @@ export default function App() {
       window.location.pathname === "/" ? (
         <RouterProvider router={router} />
       ) : (
-        <Loading/>
+       <Loading/>
       )}
+       
     </>
   );
 }

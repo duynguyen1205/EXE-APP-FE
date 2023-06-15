@@ -7,7 +7,10 @@ const RoleBaseRouter = (props) => {
   const user = useSelector((state) => state.account.user);
   const role = user.role;
 
-  if (isAmdinRoute && role === "ADMIN") {
+  if (
+    (isAmdinRoute && role === "ADMIN") ||
+    (!isAmdinRoute && (role === "USER" || role === "ADMIN"))
+  ) {
     return <>{props.children}</>;
   } else {
     return <NotPermited />;
@@ -16,6 +19,7 @@ const RoleBaseRouter = (props) => {
 
 const ProtectedRoute = (props) => {
   const isAuthorized = useSelector((state) => state.account.isAuthorized);
+  console.log("?>>>>>> co chay vo day nha");
   return (
     <>
       {isAuthorized === true ? (

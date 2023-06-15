@@ -15,9 +15,10 @@ import {
 import "./home.scss";
 import { useEffect, useState } from "react";
 import { callFetchCategory, getAllBook } from "../../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useOutletContext();
   const [listCategory, setListCategory] = useState([]);
 
   const [listBook, setListBook] = useState([]);
@@ -98,7 +99,7 @@ const Home = () => {
   //books
   useEffect(() => {
     getBook();
-  }, [current, pageSize, filters, sortQuery]);
+  }, [current, pageSize, filters, sortQuery, searchTerm]);
 
   // get list book
   const getBook = async () => {
@@ -109,6 +110,9 @@ const Home = () => {
     }
     if (sortQuery) {
       query += `${sortQuery}`;
+    }
+    if(searchTerm) {
+      query += `&mainText=/${searchTerm}/i`;
     }
     const res = await getAllBook(query);
     if (res && res?.data) {
@@ -198,7 +202,7 @@ const Home = () => {
                 <ReloadOutlined
                   title="Reset"
                   onClick={() => {
-                    form.resetFields(), setFilters("");
+                    form.resetFields(), setFilters(""), setSearchTerm("");
                   }}
                   style={{ marginTop: 4 }}
                 />

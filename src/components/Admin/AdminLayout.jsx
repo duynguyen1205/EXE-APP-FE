@@ -47,7 +47,7 @@ const items = [
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(false);
+  const [activeMenu, setActiveMenu] = useState("dashboard");
   const user = useSelector((state) => state.account.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
