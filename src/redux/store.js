@@ -17,7 +17,8 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['account'], // account sẽ không bị ghi 
+  blacklist: ['account'], // account sẽ không bị ghi
+  storage
 }
 const rootReducer = combineReducers({
   account: accountReducer,

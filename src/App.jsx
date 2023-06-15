@@ -21,6 +21,8 @@ import "./styles/global.scss";
 import TableBook from "./components/Admin/Book/TableBook";
 import OrderPage from "./pages/order";
 import HistoryPage from "./pages/history/history";
+import OrderManager from "./components/Admin/OrderManager";
+
 const Layout = () => {
   return (
     <div className="layout-page">
@@ -73,6 +75,10 @@ export default function App() {
           path: "book",
           element: <TableBook />,
         },
+        {
+          path:"order",
+          element: <OrderManager />,
+        }
       ],
     },
 
@@ -113,15 +119,14 @@ export default function App() {
   ]);
   return (
     <>
-      {/* {isAuthen === true ||
+      {isAuthen === true ||
       window.location.pathname === "/login" ||
       window.location.pathname === "/register" ||
       window.location.pathname === "/" ? (
         <RouterProvider router={router} />
       ) : (
         <Loading/>
-      )} */}
-      <RouterProvider router={router} />
+      )}
     </>
   );
 }

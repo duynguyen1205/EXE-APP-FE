@@ -12,25 +12,26 @@ const UserInfo = () => {
   const user = useSelector((state) => state.account.user);
   const [userAvatar, setUserAvatar] = useState(user?.avatar ?? "");
   const [isSubmit, setIsSubmit] = useState(false);
-  const tempAvatar = useSelector((state) => state.account.tempAvatar)
+  const tempAvatar = useSelector((state) => state.account.tempAvatar);
   const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
     tempAvatar || user?.avatar
   }`;
   const dispatch = useDispatch();
-  const handleUploadAvatar = async ({file}) => {
+  const handleUploadAvatar = async ({ file, onSuccess, onError }) => {
     const res = await callUploadAvatar(file);
     if (res && res.data) {
       const newAavatar = res.data.fileUploaded;
       dispatch(doUploadAvatar({ avatar: newAavatar }));
+      file.status === "done"
       setUserAvatar(newAavatar)
+      onSuccess("ok");
     } else {
-        console.log("bugggg rồi");
+      onError("Error");
     }
   };
   const onFinish = async (values) => {
     const _id = user.id;
     const {fullName, phone} = values;
-    console.log(values);
     setIsSubmit(true);
     const res = await callUserInfo(_id, phone, fullName, userAvatar);
     if (res && res.data) {
@@ -52,8 +53,9 @@ const UserInfo = () => {
     showUploadList: false,
     customRequest: handleUploadAvatar,
     onChange(info) {
-        console.log(info);
+        
       if (info.file.status !== "uploading") {
+        console.log(info);
       }
       if (info.file.status === "done") {
         message.success("File uploaded successfully");

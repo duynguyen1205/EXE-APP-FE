@@ -1,5 +1,6 @@
 import { Modal, Tabs } from "antd";
 import UserInfo from "./UserInfo";
+import ChangePassword from "./ChangePassword";
 
 const ManagerAccount = (props) => {
   const items = [
@@ -10,8 +11,8 @@ const ManagerAccount = (props) => {
     },
     {
       key: "password",
-      label: "Update Information",
-      // children: <ChangePassword />,
+      label: "Change Password",
+      children: <ChangePassword />,
     },
   ];
   return (
@@ -19,9 +20,10 @@ const ManagerAccount = (props) => {
       title="Account Management"
       open={props.openModal}
       footer={null}
-      onCancel={() => props.setOpenModal(false)}
+      onCancel={() => props.setOpenModal(false) }
       maskClosable={false}
       width={"60vw"}
+      centered
     >
       <Tabs defaultActiveKey="info" items={items} />
     </Modal>
