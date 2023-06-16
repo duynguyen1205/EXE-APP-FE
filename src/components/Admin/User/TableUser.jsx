@@ -10,7 +10,7 @@ import {
   Popconfirm,
 } from "antd";
 import { deleteUserApi, getAllUsers } from "../../../services/api";
-import AdvancedSearchForm from "./inputSearch";
+import AdvancedSearchForm from "./InputSearch.jsx";
 import { MdDelete } from "react-icons/md";
 import {
   ReloadOutlined,
