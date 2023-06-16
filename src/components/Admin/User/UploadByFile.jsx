@@ -3,7 +3,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import { Modal, message, Upload, Table, notification } from "antd";
 import * as XLSX from "xlsx";
 import { createUserBulk } from "../../../services/api";
-import Book from "./book.xlsx?url";
+import book from "./book1.xlsx?url";
 const { Dragger } = Upload;
 
 const dummyRequest = ({ file, onSuccess }) => {
@@ -114,7 +114,7 @@ const UploadByFile = (props) => {
           </p>
           <p className="ant-upload-hint">
             Support for a single file. Only accept .csv, .xls, .xlsx or &nbsp;
-            <a onClick={(e) => e.stopPropagation()} href={Book} download>
+            <a onClick={(e) => e.stopPropagation()} href={book} download>
               Download sample file
             </a>
           </p>
