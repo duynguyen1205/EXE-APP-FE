@@ -1,18 +1,36 @@
 import { DeleteTwoTone, LoadingOutlined } from "@ant-design/icons";
-import { Col, Divider, Form, Input, InputNumber, Radio, Row, message, notification } from "antd";
+import {
+  Col,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Row,
+  message,
+  notification,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callPlaceOrder } from "../../services/api";
 import { doPlaceOrderAction } from "../../redux/order/orderSilce";
+import ModalPayment from "./ModalPayment";
 
 const Payment = (props) => {
   const carts = useSelector((state) => state.order.carts);
   const users = useSelector((state) => state.account.user);
   const [sum, setSum] = useState(0);
   const [isSubmit, setIsSubmit] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [value, setValue] = useState(1); // Giá trị ban đầu của radio button được chọn
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    if(e.target.value === 2) {
+      setIsModalOpen(true);
+    }
+  };
   useEffect(() => {
     if (carts && carts.length > 0) {
       let sum = 0;
@@ -24,32 +42,33 @@ const Payment = (props) => {
       setSum(0);
     }
   }, [carts]);
+
   const onFinish = async (values) => {
     setIsSubmit(true);
     const detailsOrder = carts.map((item) => {
-        return {
-            bookName: item.detail.mainText,
-            quantity: item.quantity,
-            _id: item._id
-        }
-    })
+      return {
+        bookName: item.detail.mainText,
+        quantity: item.quantity,
+        _id: item._id,
+      };
+    });
     const data = {
-        name: values.name,
-        address: values.address,
-        phone: values.phone,
-        totalPrice: sum,
-        detail: detailsOrder
-    }
+      name: values.name,
+      address: values.address,
+      phone: values.phone,
+      totalPrice: sum,
+      detail: detailsOrder,
+    };
     const res = await callPlaceOrder(data);
-    if(res && res.data) {
-        message.success("Order successfully");
-        dispatch(doPlaceOrderAction());
-        props.setCurrentStep(2);
+    if (res && res.data) {
+      message.success("Order successfully");
+      dispatch(doPlaceOrderAction());
+      props.setCurrentStep(2);
     } else {
-        notification.error({
-            message: "Order failed",
-            description: res.message
-        })
+      notification.error({
+        message: "Order failed",
+        description: res.message,
+      });
     }
     setIsSubmit(false);
   };
@@ -145,9 +164,17 @@ const Payment = (props) => {
               </Form>
             </div>
             <div className="info">
-              <div className="method" style={{display: "flex", justifyContent: "space-around", marginBottom: 10}}>
-                <div>Payments</div>
-                <Radio checked>Payment on delivery</Radio>
+              <div
+                className="method"
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <div style={{margin: 20}}>Payments:</div>
+                <Radio.Group onChange={handleChange} style={{marginLeft:20, marginBottom: 10}} value={value}>
+                  <Radio value={1}>Payment on delivery</Radio>
+                  <Radio value={2}>Online payment</Radio>
+                </Radio.Group>
               </div>
             </div>
             <Divider style={{ margin: "5px 0" }} />
@@ -163,14 +190,27 @@ const Payment = (props) => {
             </div>
             <Divider style={{ margin: "5px 0" }} />
             <div className="button">
-              <button onClick={() => {form.submit()}} disabled={isSubmit}>
-                {isSubmit && <span><LoadingOutlined/>&nbsp;</span>}
+              <button
+                onClick={() => {
+                  form.submit();
+                }}
+                disabled={isSubmit}
+              >
+                {isSubmit && (
+                  <span>
+                    <LoadingOutlined />
+                    &nbsp;
+                  </span>
+                )}
                 Payment ({carts?.length ?? 0})
               </button>
             </div>
           </div>
         </Col>
       </Row>
+
+      {/* Payment modal */}
+      <ModalPayment isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} sum={sum}/>
     </>
   );
 };

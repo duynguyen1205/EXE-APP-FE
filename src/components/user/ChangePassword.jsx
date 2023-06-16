@@ -25,8 +25,8 @@ const ChangePassword = () => {
     setIsSubmit(false);
   };
   return (
-    <div style={{ minHeight: 400 }}>
-      <Row style={{textAlign: "center"}}>
+    <div style={{ minHeight: 400, textAlign: "center" }}>
+      <Row>
         <Col md={12} sm={24}>
           <Form name="basic" form={form} onFinish={onFinish}  autoComplete="off">
             <Form.Item

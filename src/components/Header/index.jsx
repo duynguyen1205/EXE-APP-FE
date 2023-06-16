@@ -13,7 +13,7 @@ import { doLogoutAction } from "../../redux/account/accountSilce";
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@ant-design/icons";
 import ManagerAccount from "../user/ManagerAcount";
-const Header = () => {
+const Header = (props) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const isAuthenticated = useSelector((state) => state.account.isAuthorized);
@@ -132,7 +132,9 @@ const Header = () => {
               <input
                 className="input-search"
                 type={"text"}
-                placeholder="Search "
+                placeholder="Search"
+                value={props.searchTerm}
+                onChange={(event) => {props.setSearchTerm(event.target.value)}}
               />
             </div>
           </div>

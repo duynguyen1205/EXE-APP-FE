@@ -103,6 +103,7 @@ const Home = () => {
 
   // get list book
   const getBook = async () => {
+    console.log(searchTerm);
     let query = `current=${current}&pageSize=${pageSize}`;
     setIsLoading(true);
     if (filters) {

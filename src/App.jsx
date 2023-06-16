@@ -22,7 +22,6 @@ import TableBook from "./components/Admin/Book/TableBook";
 import OrderPage from "./pages/order";
 import HistoryPage from "./pages/history/history";
 import OrderManager from "./components/Admin/OrderManager";
-import NotPermited from "./components/ProtectedRoute/NotPermited";
 
 const Layout = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,7 +29,7 @@ const Layout = () => {
   return (
     <div className="layout-page">
       <Header searchTerm ={searchTerm} setSearchTerm={setSearchTerm}/>
-      <Outlet context={{searchTerm, setSearchTerm}} />
+      <Outlet context={[searchTerm, setSearchTerm]} />
       <Footer />
     </div>
   );
