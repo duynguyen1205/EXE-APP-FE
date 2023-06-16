@@ -3,7 +3,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import { Modal, message, Upload, Table, notification } from "antd";
 import * as XLSX from "xlsx";
 import { createUserBulk } from "../../../services/api";
-import Book from "./book1.xlsx?url";
+import Book from "./book.xlsx?url";
 const { Dragger } = Upload;
 
 const dummyRequest = ({ file, onSuccess }) => {
