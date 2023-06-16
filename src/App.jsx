@@ -41,8 +41,7 @@ export default function App() {
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register" ||
-      window.location.pathname === "/"
+      window.location.pathname === "/register"
     )
       return;
     const res = await getUser();
