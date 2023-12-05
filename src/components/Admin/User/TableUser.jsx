@@ -214,6 +214,7 @@ const TableUser = () => {
 
   const handleSearch = (query) => {
     setFilters(query);
+    setCurrent(1);
   };
 
   const exportFile = (data) => {
